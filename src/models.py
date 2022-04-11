@@ -8,23 +8,59 @@ from eralchemy import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
+class User(Base):
+    __tablename__ = 'user'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    userId = Column(Integer, primary_key=True)
+    userFavs = Column(Integer)
+
+class Favorites_people(Base):
+    __tablename__ = 'favorites_people'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    userId = Column(Integer, primary_key=True)
+    userFav = Column(String(250), ForeignKey('user.userFavs'))
+    namePeople = Column(String(250))
+
+class Favorites_planets(Base):
+    __tablename__ = 'favorites_planets'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    userId = Column(Integer, primary_key=True)
+    userFav = Column(String(250), ForeignKey('user.userFavs'))
+    namePlanet = Column(String(250))
+
+class People(Base):
+    __tablename__ = 'people'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(250), ForeignKey('favorites_people.name'))
+    height = Column(Integer)
+    mass = Column(Integer)
+    hair_color = Column(String(250))
+    skin_color = Column(String(250))
+    eye_color = Column(String(250))
+    birth_year = Column(String(250))
+    gender = Column(String(250))
+    homeworld = Column(String(250))
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
+class Planets(Base):
+    __tablename__ = 'planets'
+    # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    name = Column(String(250), ForeignKey('favorites_planets.name'))
+    rotation_period = Column(Integer)
+    orbital_period = Column(Integer)
+    diameter = Column(Integer)
+    climate = Column(String(250))
+    gravity = Column(String(250))
+    terrain = Column(String(250))
+    surface_water = Column(Integer)
+    population = Column(Integer)
+    residents = Column(String(250))
 
     def to_dict(self):
         return {}
