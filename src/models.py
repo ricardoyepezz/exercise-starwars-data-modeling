@@ -21,7 +21,8 @@ class Favorites_people(Base):
     # Notice that each column is also a normal Python instance attribute.
     userId = Column(Integer, primary_key=True)
     userFav = Column(String(250), ForeignKey('user.userFavs'))
-    namePeople = Column(String(250))
+    namePeople = Column(String(250), ForeignKey('people.name'))
+    user = relationship(User)
 
 class Favorites_planets(Base):
     __tablename__ = 'favorites_planets'
@@ -29,14 +30,15 @@ class Favorites_planets(Base):
     # Notice that each column is also a normal Python instance attribute.
     userId = Column(Integer, primary_key=True)
     userFav = Column(String(250), ForeignKey('user.userFavs'))
-    namePlanet = Column(String(250))
+    namePlanet = Column(String(250), ForeignKey('planets.name'))
+    user = relationship(User)
 
 class People(Base):
     __tablename__ = 'people'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), ForeignKey('favorites_people.name'))
+    name = Column(String(250))
     height = Column(Integer)
     mass = Column(Integer)
     hair_color = Column(String(250))
@@ -45,13 +47,14 @@ class People(Base):
     birth_year = Column(String(250))
     gender = Column(String(250))
     homeworld = Column(String(250))
+    favorites_people = relationship(Favorites_people)
 
 class Planets(Base):
     __tablename__ = 'planets'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), ForeignKey('favorites_planets.name'))
+    name = Column(String(250))
     rotation_period = Column(Integer)
     orbital_period = Column(Integer)
     diameter = Column(Integer)
@@ -61,9 +64,17 @@ class Planets(Base):
     surface_water = Column(Integer)
     population = Column(Integer)
     residents = Column(String(250))
+    favorites_planets = relationship(Favorites_planets)
+
 
     def to_dict(self):
         return {}
 
 ## Draw from SQLAlchemy base
-render_er(Base, 'diagram.png')
+
+try:
+    result = render_er(Base, 'diagram.png')
+    print("Success! Check the diagram.png file")
+except Exception as e:
+    print("There was a problem genering the diagram")
+    raise e 
